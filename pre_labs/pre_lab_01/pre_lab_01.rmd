@@ -185,7 +185,7 @@ umd_courses |>
   arrange(desc(total_seats))
 ```
 
-Compared to the previous codeblock, what has changed and how did that affect the result? **Answer**
+Compared to the previous codeblock, what has changed and how did that affect the result? **Answer It's sorting the total number of seats by individual terms.**
 
 ### Task 13: different kinds of summarizations
 
@@ -203,7 +203,7 @@ umd_courses |>
   arrange(desc(total_seats))
 ```
 
-Compared to the previous codeblock, what has changed and how did that affect the result? What do the top terms have in common? **Answer**
+Compared to the previous codeblock, what has changed and how did that affect the result? What do the top terms have in common? **Answer It is similar to the last codeblock, but there is an additional column with the mean number of seats by each term.**
 
 ### Task 14: more aggregations
 
@@ -225,7 +225,7 @@ umd_courses |>
 
 Compared to the previous codeblock, what has changed and how did that affect the result? How is the data sorted?
 
-**Answer**
+**Answer The seats are split up by department with the other columns of data applicable to each specific department. It is sorted by the total number of class seats per department.**
 
 ### Task 12: Questions
 
@@ -233,8 +233,8 @@ No code here; I want you to provide three questions that this data suggests to y
 
 **Answer**
 
-1.  
+1.  How has the mean number of seats per class in each department changed over time?
 
-2.  
+2.  How has the total number of seats changed from term to term? Has it increased, decreased or mostly stayed the same over time?
 
-3.  
+3.  Which apartment currently has the most total seats and largest mean class size?
