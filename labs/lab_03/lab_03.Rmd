@@ -49,21 +49,35 @@ pg_schools <- md_payments |>
 
 Q2: Using that `pg_schools` dataframe, write code to calculate the total amount of payments to the Prince George's County School system for each fiscal year. Which fiscal year had the largest total amount? What do you notice about the years listed, and what questions do you have about that data?
 
-A2:
+A2: The fiscal year 2020 had the largest total amount of payments to the Prince George's County School system with $1,362,372,202. The data spans from 2013 to 2020 but is missing the year 2016.
 
 ```{r}
+pg_schools |>
+  group_by(fiscal_year) |>
+  summarise(total_amount = sum(amount)) |>
+  arrange(desc(total_amount))
 ```
 
 Q3. You're interested in examining the vendors paid for capital projects at the University of Maryland. Search the payments data to find those payments, then write code to produce a list of each vendor and the total amount it received. Look carefully at that list - what cleaning will it require to ensure that you have only one row per vendor and zip code? Provide at least three examples of vendor names that are similar and should be combined into one. Describe how you might clean that data so that any nearly identical vendors would look identical - what would you change and how?
 
-A3.
+A3. Three vendor names that are similar that could be combined into one are A MORTON THOMAS & ASSOC INC and A MORTON THOMAS & ASSOCIATES INC, A&I INC and A&I INC. as well as AMTEK COMPANY INC and AMTEK COMPANY, INC. There is some cleaning that needs to be done on the data in order to prevent the many duplicates in the data, and some potential fixes could be deleting punctuation marks and taking common abbreviation like "Inc." and "Incorporation" into account.
 
 ```{r}
+md_payments |>
+  filter(agency_name == 'CAPITAL PROJECTS- UNIVERSITY OF MARYLAND') |>
+  group_by(vendor_name) |> 
+  summarize(total = sum(amount)) |> 
+  arrange(vendor_name)
 ```
 
 Q4: You want to understand how much state grant money went to stem cell research projects each fiscal year. Search the data to find grants that fit that description. Once you find which columns contain the information you want, your code should standardize the data needed to find just the grants for stem cell research in a single filter. Then create a total amount of money for each fiscal year. Write a sentence summarizing how stem cell research funding has changed over time.
 
-A4:
+A4: Stem cell research grants have declined year after year over the last decade or so since peaking in 2009.
 
 ```{r}
+md_grants_loans |>
+  mutate(description = str_to_upper(description)) |> 
+  filter(str_detect(description,"STEM CELL RESEARCH GRANT")) |> 
+  group_by(fiscal_year) |> 
+  summarize(total = sum(amount))
 ```
