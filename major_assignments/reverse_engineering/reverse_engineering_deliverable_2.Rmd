@@ -1,7 +1,7 @@
 ---
 title: "Reverse Engineering Project"
 author: "Kenan Grier, Marissa Yelenik, Matthew Kiras, Nicholas Wolcott"
-date: "Date here"
+date: "10/16/2023"
 output:
   html_document:
     theme: cerulean
@@ -28,7 +28,6 @@ Loading required libraries for this analysis.
 library(tidyverse)
 library(janitor)
 library(lubridate)
-
 ```
 
 ## Load and Cleaning Data
@@ -65,13 +64,16 @@ enrollment_changes <- read.csv('data/Enrollment-Changes.csv') |>
 In this notebook, we are reverse engineering five sentences from the story.
 
 ### Sentence 1
-
--   **Sentence text**: [Paste in sentence to engineer here]
--   **Analysis summary**: [Write up two to three sentences describing the results of your analysis. Were you able to confirm the finding? If not, why not?]
+-   **Sentence text**: The population of school-age kids in the states we studied fell by about 183,000, according to census estimates.
+-   **Analysis summary**: I was able to get the change in school aged population to show, but need to summarize it to confirm the the sentence.
 
 ```{r}
 # Put code to reverse engineer sentence here
-
+school_aged_population_changes |>
+  group_by(census_population_4_1_2020) |>
+  group_by(census_population_7_1_2020) |>
+  group_by(census_population_7_1_2021) |>
+  arrange(change_in_school_aged_population_5_17)
 # Display results of code below this codeblock
 
 ```
