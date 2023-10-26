@@ -84,7 +84,7 @@ enrollment_changes |>
 
 ### Sentence 2
 
--   **Sentence text**: "Those states saw private-school enrollment grow by over 100,000 students. Home-schooling grew even more, surging by more than 180,000" from 2019-2020 to 2021-2022.
+-   **Sentence text**: "Those states saw private-school enrollment grow by over 100,000 students. Home-schooling grew even more, surging by more than 180,000 from 2019-2020 to 2021-2022."
 -   **Analysis summary**: We used the enrollment_changes data set to find the differences is private/homeschooled kids between the 2019 school year and the 2021 school year, confirming the private school enrollment did grow by over 100,000 students and home-schooling did grow by more than 180,000 students.
 
 ```{r}
@@ -105,8 +105,8 @@ enrollment_changes |>
 
 ### Sentence 3
 
--   **Sentence text**: California alone showed over 150,000 missing students in the data.
--   **Analysis summary**: We were not able to reproduce the the over 150,000 missing students in California due to an error in the code. 
+-   **Sentence text**: "California alone showed over 150,000 missing students in the data, and New York had nearly 60,000."
+-   **Analysis summary**: 
 
 ```{r}
 # Put code to reverse engineer sentence here
@@ -136,7 +136,7 @@ age_enrollment_change <- enrollment_changes_ca_ny |>
 
 ### Sentence 4
 
--   **Sentence text**: [Paste in sentence to engineer here]
+-   **Sentence text**: "The population of school-age kids in the states we studied fell by about 183,000, according to census estimates."
 -   **Analysis summary**: [Write up two to three sentences describing the results of your analysis. Were you able to confirm the finding? If not, why not?]
 
 ```{r}
