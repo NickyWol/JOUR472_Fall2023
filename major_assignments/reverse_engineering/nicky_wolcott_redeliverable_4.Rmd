@@ -110,19 +110,19 @@ enrollment_changes |>
 # Put code to reverse engineer sentence here
 public_enrollment_changes <- enrollment_changes |>
   filter(enrollment_type == 'Public school enrollment') |>
-  filter(state_abbrev == 'CA' | state_abbrev == 'NY') |>
+  filter(state_abbrev == 'CA' | state_abbrev == 'NY' | state_abbrev == 'LA' | state_abbrev == 'NC' | state_abbrev == 'WA' | state_abbrev == 'CO' | state_abbrev == 'GA' | state_abbrev == 'MN' | state_abbrev == 'WI' | state_abbrev == 'NH' | state_abbrev == 'MA' | state_abbrev == 'MT' | state_abbrev == 'DE' | state_abbrev == 'ND' | state_abbrev == 'DC' | state_abbrev == 'SD' | state_abbrev == 'SC' | state_abbrev == 'NE' | state_abbrev == 'RI' | state_abbrev == 'TN' | state_abbrev == 'PA' | state_abbrev == 'FL') |>
   select(state,total_change)
 
 non_public_enrollment_changes <- enrollment_changes |>
   filter(enrollment_type == 'Total nonpublic enrollment (private + homeschool)') |>
-  filter(state_abbrev == 'CA' | state_abbrev == 'NY') |>
+  filter(state_abbrev == 'CA' | state_abbrev == 'NY' | state_abbrev == 'LA' | state_abbrev == 'NC' | state_abbrev == 'WA' | state_abbrev == 'CO' | state_abbrev == 'GA' | state_abbrev == 'MN' | state_abbrev == 'WI' | state_abbrev == 'NH' | state_abbrev == 'MA' | state_abbrev == 'MT' | state_abbrev == 'DE' | state_abbrev == 'ND' | state_abbrev == 'DC' | state_abbrev == 'SD' | state_abbrev == 'SC' | state_abbrev == 'NE' | state_abbrev == 'RI' | state_abbrev == 'TN' | state_abbrev == 'PA' | state_abbrev == 'FL') |>
   select(state,total_change)
 
 enrollment_changes_ca_ny <- non_public_enrollment_changes |>
   inner_join(public_enrollment_changes, by = 'state')
 
 school_age_change <- school_aged_population_changes |>
-  filter(state == 'California' | state == 'New York') |>
+  filter(state == 'California' | state == 'New York' | state == 'Louisiana' | state == 'North Carolina' | state == 'Washington' | state == 'Colorado' | state == 'Georgia' | state == 'Minnesota' | state == 'Wisconsin' | state == 'New Hampshire' | state == 'Massachusetts' | state == 'Montana' | state == 'Delaware' | state == 'North Dakota' | state == 'District of Columbia' | state == 'South Dakota' | state == 'South Carolina' | state == 'Nebraska' | state == 'Rhode Island' | state == 'Tennessee' | state == 'Pennsylvania' | state == 'Florida') |>
   select(state,change_in_school_aged_population_5_17)
 
 age_enrollment_change <- enrollment_changes_ca_ny |>
