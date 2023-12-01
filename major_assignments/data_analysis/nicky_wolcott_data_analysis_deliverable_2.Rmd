@@ -58,7 +58,7 @@ Sys.getenv("CENSUS_API_KEY")
 In this notebook, we are beginning to explore how to answer our five questions from the first Data Analysis Deliverable.
 
 ### Question 1
-How has the amount of grants and loans handed out changed over time? (Since we have data since FY2009)
+How has the amount of grants and loans and the number handed out changed over time?
 
 Findings: We found that 2020 was the year that the most grants and loans were distributed, and where the most money was spent. This could be due to a surplus in government spending during the pandemic, because so many things were shut down.
 
@@ -100,25 +100,6 @@ MD_Grant_Loan_Data |>
 ```
 
 ### Question 3
-What zip codes or counties receive the most grants from the state of Maryland and why?
-
-Limitations: Zipcodes include 6 and 9 digit codes
-
-```{r}
-# Put code to reverse engineer sentence here
-zipcode_organization <- MD_Grant_Loan_Data |>
-  group_by(Zip.Code)|>
-  summarize(Zip_Sum = sum(Amount)) |>
-  arrange(desc(Zip_Sum))
-
-zipcode_num_amount <- number_and_amount |>
-  median_age <- get_acs(geography = "county")
-
-# Display results of code below this codeblock
-
-```
-
-### Question 4
 What zip codes or counties receive the most grants from the state of Maryland and why?
 
 Limitations: Zipcodes include 6 and 9 digit codes
