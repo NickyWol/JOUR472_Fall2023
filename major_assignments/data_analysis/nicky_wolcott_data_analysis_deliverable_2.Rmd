@@ -106,11 +106,12 @@ Limitations: Zipcodes include 6 and 9 digit codes
 
 ```{r}
 zipcode_organization <- MD_Grant_Loan_Data |>
+  
   group_by(zip_code)|>
   summarize(zip_sum = sum(amount)) |>
   arrange(desc(zip_sum))
 
-zipcode_num_amount <- number_and_amount |>
-  median_age <- get_acs(geography = "county")
 ```
+
+
 -30-
