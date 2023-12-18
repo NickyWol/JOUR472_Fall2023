@@ -1,0 +1,142 @@
+---
+title: "Data Analysis Project"
+author: "Sasha Allen, Laura Charleston, Nicholas Wolcott"
+date: "11/30/23"
+output:
+  html_document:
+    theme: cerulean
+    highlight: pygments
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries
+
+Loading required libraries for this analysis.
+
+```{r echo=FALSE, message=FALSE}
+library(tidyverse)
+library(tidytext)
+library(readr)
+library(janitor)
+library(refinr)
+library(lubridate)
+library(tidycensus)
+```
+
+## Load and Cleaning Data
+
+Load and clean the core data set to prepare for analysis.
+
+```{r}
+MD_Grant_Loan_Data <- read.csv('data/State_of_Maryland_Grant_and_Loan_Data__FY2009_to_FY2022.csv') |>
+  clean_names() 
+
+census_api_key("c4b6d5f557fdd710f546c349eadd47d75c37b8aa", install=TRUE, overwrite=TRUE)
+readRenviron("~/.Renviron")
+
+Sys.getenv("CENSUS_API_KEY")
+```
+
+### Question 1
+In which year were the most grants and loans distributed? Is that the same year in which the largest sum of grants and loans were distributed?
+
+Findings: We found that 2020 was the year that the most grants and loans were distributed, and when the most money was spent. This could be due to a surplus in government spending during the pandemic, because so many things were shut down and the government funding health initiatives while also trying to stabilize the economy probably cost a lot.
+
+```{r}
+number_loans_overtime <- MD_Grant_Loan_Data |>
+  group_by(fiscal_year) |>
+  summarize(yearly_amount = n()) |>
+  arrange(desc(yearly_amount))
+
+amount_loans_over_time <- MD_Grant_Loan_Data |>
+  group_by(fiscal_year)|>
+  summarize(yearly_sum = sum(amount)) |>
+  arrange(yearly_sum)
+
+loans_number_and_amount <- number_loans_overtime |>
+  left_join(amount_loans_over_time, by="fiscal_year")
+```
+
+### Question 2
+How has the amount of grants and loans and the number handed out changed over time?
+
+Findings: We made a scatter plot that showed the sum of grants and loans handed out each fiscal year and that generally, the amount of money given out has been steadily increasing over the last decade or so, even discounting 2020 as an outlier due to the unusual circumstances. We also and ran a correlation test to show that in our data set, the number of grants and loans given out and the total amount of money in grants and loans handed out were highly correlated due to the p-value of 0.0006573. This makes sense, as both numbers seem to somewhat consistently increase over time.
+
+```{r}
+loans_number_and_amount |>
+  ggplot() +
+  geom_point(aes(x=fiscal_year,y=yearly_sum)) +
+  geom_smooth(aes(x=fiscal_year,y=yearly_sum), method="lm")
+```
+
+```{r}
+cor.test(loans_number_and_amount$yearly_sum, loans_number_and_amount$fiscal_year)
+```
+
+### Question 3
+
+Which department spent the most money on grants and loans?
+
+Findings: We hit a big limitation here as we could not filter by department and get good results because of varying department names. There were too many variables that plagued the grantor column (different capitalization, sometimes using dashes and sometimes not, departments citing specific areas of their own budget (eg. Operating, Operating Grants, Capital Grants) and inconsistent naming conventions for the same department (acronyms sometimes being spelled out and sometimes not, etc.)). However, looking through the top of this data we attempted to clean and sorted by the total sum a grantor handed out is still very telling. Almost every grantor on the top few pages is a combination of the state's department of transportation and the Washington Metropolitan Area Transit Authority, or WMATA. This shows hat a lot of the state's biggest grants are spent on public transportation and its infrastructure. Other grantors such as the Maryland State Department of Education and the Maryland Higher Education Commission shows that education is likely also a large area of spending for grants and loans handed out by the state.
+
+```{r}
+cleaned_MD_Grant_Loan_Data <- MD_Grant_Loan_Data |>
+  mutate(cleaned_MD_Grant_Loan_Data = key_collision_merge(grantor)) |>
+  select(grantor, cleaned_MD_Grant_Loan_Data, everything())
+
+MD_Grant_Loan_Data |>
+  group_by(grantor) |>
+  summarize(department_sum = sum(amount)) |>
+  arrange(desc(department_sum)) 
+```
+
+### Question 4
+What zip codes or counties receive the most grants from the state of Maryland?
+
+Findings: Oddly, the top grant and loan receiver from the state of Maryland is a zip code in Washington, D.C (20001). While that may seem weird at first, it makes sense considering that the state of Maryland provides grants and loans to the Washington Metropolitan Area Transit Authority which, while located in D.C., provides transportation and public transportation infrastructure to Maryland residents. While the grantor is usually also labelled WMATA along with Maryland's department of transportation, this seems to be because the money is earmarked for WMATA due to the relationship between the two. Therefore, this money still needs to be transferred to the Grantee, which is WMATA and is located in Washington, D.C., therefore making up the largest allocation of grants and loans by zip code. This makes sense seeing from our last question that Maryland spends a lot of money on public transportation via grants and loans.
+
+```{r}
+zipcode_organization <- MD_Grant_Loan_Data |>
+  group_by(zip_code)|>
+  filter(str_length(zip_code) <= 5) |> 
+  summarize(zip_sum = sum(amount)) |>
+  arrange(desc(zip_sum))
+```
+
+### Question 5
+Is there a correlation between the median income of the counties that receive the most grants and loans?
+
+Findings: There seems to be a slight correlation between counties with a lower median income receiving more grants and loans from the state government due to a p-value of just 0.02914 in our correlation test, although looking at our scatter plot, it seems like our results could potentially be skewed by some outliers that receive much more money in grants and loans than any other area in Maryland. The top grant and loan receiver in Maryland by zip code is in Landover (Prince George's County) and the rest of the top five are all zip codes in Baltimore where the median income is less than 50,000 (and considerably less in some cases). These data points are clear to see on our scatter plot while the rest of the data is more cluttered around the x-axis, although I do beleive it shows that Maryland's richest zip codes receive little to no state funding via grants and loans.
+
+```{r}
+zip_code_median_income <- get_acs(geography = 'zcta', variable ='B19013_001', year= 2019, state = 'MD')
+
+zip_code_median_income <- zip_code_median_income |>
+  rename( "zip_code" = "GEOID" )
+
+zip_code_median_income <- zip_code_median_income |>
+  rename( "income_estimate" = "estimate" )
+
+zipcode_income_and_loans <-  zip_code_median_income |>
+  left_join(zipcode_organization, by="zip_code")
+```
+
+```{r}
+zipcode_income_and_loans |>
+  ggplot() +
+  geom_point(aes(x=income_estimate,y=zip_sum)) +
+  geom_smooth(aes(x=income_estimate,y=zip_sum), method="lm")
+```
+
+
+```{r}
+cor.test(zipcode_income_and_loans$income_estimate, zipcode_income_and_loans$zip_sum)
+```
+-30-
