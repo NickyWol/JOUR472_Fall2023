@@ -17,7 +17,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Load libraries
-
 Loading required libraries for this analysis.
 
 ```{r echo=FALSE, message=FALSE}
@@ -31,7 +30,6 @@ library(tidycensus)
 ```
 
 ## Load and Cleaning Data
-
 Load and clean the core data set to prepare for analysis.
 
 ```{r}
@@ -43,6 +41,8 @@ readRenviron("~/.Renviron")
 
 Sys.getenv("CENSUS_API_KEY")
 ```
+### Link to our memo
+https://docs.google.com/document/d/13ZKXJpGfrOk6hPcO_H-9I50-cG9ue9waDdtiA3OEKYg/edit?usp=sharing
 
 ### Question 1
 In which year were the most grants and loans distributed? Is that the same year in which the largest sum of grants and loans were distributed?
